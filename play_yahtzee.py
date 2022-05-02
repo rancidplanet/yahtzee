@@ -4,18 +4,19 @@ from rolls import *
 
 class player:
     def __init__(self,name):
-        self.rolls = []
+        self.roll = []
         self.name = str(name)
 
     def take_turn(self):
         x = multi_dice_role(5)
-        self.rolls.append(x)
-
         print(self.name + " rolled a ", x.get_hand(),"!")
+        self.roll = x
 
     def get_hand(self):
-        return self.
+        return self.roll.get_hand()
 
+    def print_hand(self):
+        self.roll.print_hand()
  
 
 class check:
@@ -23,12 +24,100 @@ class check:
         pass
 
 
-    def __c_three_of_a_kind(hand):
+
+    def __unique_helper(self,hand):
+
+        #count the unique values
+        unique_list = [[x,0] for x in range(1,6+1)]
+
+        for die in hand:
+            for val in unique_list:
+                if die == val[0]:
+                    val[1] = val[1] + 1
+
+        unique_list.sort(key = lambda x:x[1], reverse=True)
+
+        return unique_list
+
+    def __c_yahtzee(self,hand):
+        x = set(hand)
+        if len(hand) == 1:
+            print("Yahtzee!")
+    
+
+    def __c_three_of_a_kind(self,hand):
+        #return values that are more than three
+        unique_list = self.__unique_helper(hand)
+        ret = []
+        for thing in unique_list:
+            if thing[1] >= 3:
+                ret.append((thing[0],thing[1]))
+        if len(ret) == 0:
+            return None
+        else:
+            return ret
+
+
+    def __c_four_of_a_kind(self,hand):
+        #return values that are more than three
+        unique_list = self.__unique_helper(hand)
+        ret = []
+        for thing in unique_list:
+            if thing[1] >= 4:
+                ret.append((thing[0],thing[1]))
+
+        if len(ret) == 0:
+            return None
+        else:
+            return ret
+
+
+    def __c_full_house(self,hand):
+        #checks if there is a count of 3 and a count of 2
+        unique_list = self.__unique_helper(hand)
+        three_count = False
+        two_count = False
+
+        for thing in unique_list:
+            if thing[1] == 3:
+                three_count = True
+                continue
+            if thing[1] == 2:
+                two_count = True
+                continue
+
+        if three_count and two_count:
+            return True
+
+
+    def __c_large_straight(self,hand):
+        #checks for a large straight
+        hand.sort(reverse=True)
+
+        #if the difference between the two numbers arent 1, its not sequential
+        for i in range(0,(len(hand) - 1) ):
+            if (hand[i] - hand[i+1]) != 1:
+                return False
+
+        return True
+
+    def __c_chance(self,hand):
+        t = 0
+        for thing in hand:
+            t=t+thing
+
+        return sum(hand)
 
     def __check_hand(self,hand):
         print("Your Hand!:",hand)
             
 
+        print("Yahtzee? ", self.__c_yahtzee(hand))
+        print("Three of a kind?", self.__c_three_of_a_kind(hand))
+        print("Four of a kind?", self.__c_four_of_a_kind(hand))
+        print("Full House?", self.__c_full_house(hand))
+        print("Large Straight?", self.__c_large_straight(hand))
+        print("The sum of the dice for chance is: ",self.__c_chance(hand))
 
     def check_hand(self,hand):
         self.__check_hand(hand)
@@ -48,7 +137,8 @@ if __name__ == "__main__":
 
     g = game()
     p_1 = player("Kevin")
+
+
     p_1.take_turn()
-
-
     g.check_hand(p_1.get_hand())
+
