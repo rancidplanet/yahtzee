@@ -38,9 +38,20 @@ class player:
 
 class check:
     def __init__(self):
-        pass
+        self.yahtzee_count = 0
+        self.bonus_points = 0
 
+    
+    def __c_(self,hand):
+        unique_list = unique_helper(hand)
+        unique_list.sort(key = lambda x:x[0])
+        print("Upper Scoreboard!")
+        print("Upper total (need 63): ",self.bonus_points)
 
+        for thing in unique_list:
+            print("Score for ", thing[0], "'s: ", thing[1])
+
+        print("\n\n\n")
 
 
     def __c_yahtzee(self,hand):
@@ -138,7 +149,7 @@ class check:
     def __check_hand(self,hand):
         print("Your Hand!:",hand)
             
-
+        self.__c_(hand)
         print("Yahtzee? ", self.__c_yahtzee(hand))
         print("Three of a kind?", self.__c_three_of_a_kind(hand))
         print("Four of a kind?", self.__c_four_of_a_kind(hand))
