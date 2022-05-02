@@ -101,6 +101,29 @@ class check:
 
         return True
 
+
+
+    def __c_small_straight(self,hand):
+        #checks for a small straight
+        hand = list(set(hand) )
+        hand.sort(reverse=True)
+        seq_count = 0 
+        #if the difference between the two numbers arent 1, its not sequential
+        for i in range(0,(len(hand) - 1) ):
+            diff = hand[i] - hand[i+1]
+            if diff == 1:
+                seq_count+=1
+            else:
+                seq_count = 0
+
+
+        if seq_count >= 3:
+            return True
+        else:
+            return False
+
+
+
     def __c_chance(self,hand):
         t = 0
         for thing in hand:
@@ -116,6 +139,7 @@ class check:
         print("Three of a kind?", self.__c_three_of_a_kind(hand))
         print("Four of a kind?", self.__c_four_of_a_kind(hand))
         print("Full House?", self.__c_full_house(hand))
+        print("Small Straight? ", self.__c_small_straight(hand))
         print("Large Straight?", self.__c_large_straight(hand))
         print("The sum of the dice for chance is: ",self.__c_chance(hand))
 
