@@ -1,6 +1,22 @@
-from rolls import *
+from math import *
+from random import *
+from time import time
+from fractions import Fraction as frac
 
 
+def unique_helper(hand):
+
+    #count the unique values
+    unique_list = [[x,0] for x in range(1,6+1)]
+
+    for die in hand:
+        for val in unique_list:
+                if die == val[0]:
+                    val[1] = val[1] + 1
+
+    unique_list.sort(key = lambda x:x[1], reverse=True)
+
+    return unique_list
 
 class player:
     def __init__(self,name):
@@ -8,15 +24,16 @@ class player:
         self.name = str(name)
 
     def take_turn(self):
-        x = multi_dice_role(5)
-        print(self.name + " rolled a ", x.get_hand(),"!")
+        x = [randint(1,6) for x in range(1,6)]
+        x.sort(reverse=True)
         self.roll = x
+        print(self.name + " rolled a ", x,"!")
 
     def get_hand(self):
-        return self.roll.get_hand()
+        return self.roll
 
     def print_hand(self):
-        self.roll.print_hand()
+        print(self.roll)
  
 
 class check:
@@ -25,19 +42,6 @@ class check:
 
 
 
-    def __unique_helper(self,hand):
-
-        #count the unique values
-        unique_list = [[x,0] for x in range(1,6+1)]
-
-        for die in hand:
-            for val in unique_list:
-                if die == val[0]:
-                    val[1] = val[1] + 1
-
-        unique_list.sort(key = lambda x:x[1], reverse=True)
-
-        return unique_list
 
     def __c_yahtzee(self,hand):
         x = set(hand)
@@ -47,7 +51,7 @@ class check:
 
     def __c_three_of_a_kind(self,hand):
         #return values that are more than three
-        unique_list = self.__unique_helper(hand)
+        unique_list = unique_helper(hand)
         ret = []
         for thing in unique_list:
             if thing[1] >= 3:
@@ -60,7 +64,7 @@ class check:
 
     def __c_four_of_a_kind(self,hand):
         #return values that are more than three
-        unique_list = self.__unique_helper(hand)
+        unique_list = unique_helper(hand)
         ret = []
         for thing in unique_list:
             if thing[1] >= 4:
@@ -74,7 +78,7 @@ class check:
 
     def __c_full_house(self,hand):
         #checks if there is a count of 3 and a count of 2
-        unique_list = self.__unique_helper(hand)
+        unique_list = unique_helper(hand)
         three_count = False
         two_count = False
 
